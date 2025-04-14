@@ -9,61 +9,67 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# Load the dataset
-df = pd.read_csv("prices.csv")
+# Read the cleaned CSV file
+wheat_prices_wide = pd.read_csv("prices.csv")
 
-# Convert 'Date' column to datetime using correct format
-df["Date"] = pd.to_datetime(df["Date"], format="%d-%b-%y", errors="coerce")
-df = df.dropna(subset=["Date"])
+# Convert the 'Date' column to datetime format
+wheat_prices_wide["Date"] = pd.to_datetime(wheat_prices_wide["Date"])
+print("Missing dates:", wheat_prices_wide["Date"].isna().sum())
 
-# Reshape to long format
-df_long = df.melt(id_vars=["Date"], var_name="Country", value_name="Price")
+# Reshape the data from wide to long format
+wheat_prices_long = wheat_prices_wide.melt(
+    id_vars="Date",
+    var_name="Country",
+    value_name="Price"
+)
 
-# Drop missing or zero prices
-df_long = df_long.dropna(subset=["Price"])
-df_long = df_long[df_long["Price"] > 0]
+# Ensure the 'Price' column is numeric (all should already be clean)
+wheat_prices_long["Price"] = pd.to_numeric(wheat_prices_long["Price"])
 
-# Label each row as Pre-War or Post-War based on cutoff
-cutoff_date = pd.Timestamp("2022-02-24")
-df_long["Period"] = df_long["Date"].apply(lambda x: "Pre-War" if x < cutoff_date else "Post-War")
+# Remove rows with missing or zero prices
+wheat_prices_long = wheat_prices_long[wheat_prices_long["Price"].notna()]
+wheat_prices_long = wheat_prices_long[wheat_prices_long["Price"] > 0]
 
-# Create a balanced subset: 3 years before and 3 years after the war
-trimmed_pre_war = df_long[(df_long["Period"] == "Pre-War") & (df_long["Date"] >= "2019-03-01")]
-post_war = df_long[df_long["Period"] == "Post-War"]
-balanced_df = pd.concat([trimmed_pre_war, post_war])
+# Add a new column that marks each date as 'Pre-War' or 'Post-War'
+invasion_date = pd.Timestamp("2022-02-24")
+wheat_prices_long["Period"] = wheat_prices_long["Date"].apply(
+    lambda date: "Pre-War" if date < invasion_date else "Post-War"
+)
 
-# Compute median prices
-medians = balanced_df.groupby(["Country", "Period"])["Price"].median().reset_index()
+# Create a balanced comparison window: last 3 years before and after the invasion
+pre_war_trimmed = wheat_prices_long[
+    (wheat_prices_long["Period"] == "Pre-War") &
+    (wheat_prices_long["Date"] >= "2019-03-01")
+]
+post_war_data = wheat_prices_long[wheat_prices_long["Period"] == "Post-War"]
+balanced_prices = pd.concat([pre_war_trimmed, post_war_data])
 
-# Plot boxplot with median annotations
+# Calculate the median price for each country and period
+median_prices = balanced_prices.groupby(["Country", "Period"])["Price"].median().reset_index()
+
+# Prepare the boxplot
 plt.figure(figsize=(14, 6))
 sns.set(style="whitegrid")
-
 ax = sns.boxplot(
-    data=balanced_df,
+    data=balanced_prices,
     x="Country",
     y="Price",
     hue="Period",
     palette="Set2"
 )
 
-plt.title("Boxplot with Median Values: Wheat Prices (Balanced 3-Year Periods)")
+plt.title("Wheat Prices by Country: Pre-War vs. Post-War (Balanced 3-Year Sample)")
 plt.xticks(rotation=45)
 
-# Determine x-axis positions for annotation offsets
-positions = {}
-for i, country in enumerate(balanced_df["Country"].unique()):
-    positions[country] = i
+# Annotate median values above the boxes
+x_positions = {country: i for i, country in enumerate(balanced_prices["Country"].unique())}
 
-# Add annotations for medians
-for index, row in medians.iterrows():
-    x_offset = -0.2 if row["Period"] == "Pre-War" else 0.2
-    x = positions[row["Country"]] + x_offset
+for _, row in median_prices.iterrows():
+    x_shift = -0.2 if row["Period"] == "Pre-War" else 0.2
+    x = x_positions[row["Country"]] + x_shift
     y = row["Price"]
     label = f"{y:.1f}"
-    plt.text(x, y + 1, label, ha='center', va='bottom', fontsize=8, color='black')
+    plt.text(x, y + 1, label, ha='center', va='bottom', fontsize=8)
 
 plt.tight_layout()
-
-# Save figure
-plt.savefig("prices.png", dpi=300)
+plt.savefig("wheat_prices_pre_post_war.png", dpi=300)

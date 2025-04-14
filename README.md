@@ -118,7 +118,7 @@ This map shows the global distribution of wheat imports in 2023. Countries are c
 
 **3. Global Wheat Exporters Over Two Decades** 
 
-![Export Shares](wheat_exports_combined_plot.png)
+![Export Shares](export_share_change_plot.png)
 
 The visualizations compare the global wheat export shares of the top 15 countries in 2023 with their positions in 2003. Russia shows the most significant rise, increasing its share from 3% to nearly 25%, becoming the world’s largest exporter. In contrast, the United States drops from 31% to under 9%, marking the steepest decline. Ukraine also gained notable ground, while traditional exporters like Australia, Argentina, and Canada lost share. The diverging plot clearly highlights these shifts, underscoring the changing dynamics of global wheat trade over the past two decades.
 
@@ -132,9 +132,9 @@ From the early 2000s until the global food crisis in 2008, wheat prices show a r
 
 As an alternative visual representation of the price trends shown earlier in the line chart, this quarterly heatmap provides a more detailed and time-sensitive view of wheat export prices across major countries. By aggregating monthly data into three-month periods, it captures not only long-term trends but also seasonal fluctuations and sudden market shocks with greater resolution. The shifts in color intensity from one quarter to the next reveal synchronized responses among exporters, especially during key periods such as the 2008 food crisis or the 2022 Ukraine war.
 
-![Price_median](prices.png)
+![Price_median](wheat_prices_pre_post_war.png)
 
-This boxplot named `prices.png` illustrates the distribution of monthly wheat export prices across seven major producing countries, comparing the three-year periods before and after the outbreak of the Russia–Ukraine war (February 24, 2022). The median price for each country and period is annotated on the plot, providing a clear indication of shifts in central price levels. The visual reveals that post-war prices have generally increased across all countries, with notable jumps in Canada, Argentina, and the USA. The spread of prices (i.e., market volatility) also appears wider in the post-war period for several countries, reflecting heightened uncertainty in global wheat markets during geopolitical disruptions.
+This boxplot named illustrates the distribution of monthly wheat export prices across seven major producing countries, comparing the three-year periods before and after the outbreak of the Russia–Ukraine war (February 24, 2022). The median price for each country and period is annotated on the plot, providing a clear indication of shifts in central price levels. The visual reveals that post-war prices have generally increased across all countries, with notable jumps in Canada, Argentina, and the USA. The spread of prices (i.e., market volatility) also appears wider in the post-war period for several countries, reflecting heightened uncertainty in global wheat markets during geopolitical disruptions.
 
 ![histogram](histogram.png)
 

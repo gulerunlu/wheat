@@ -9,43 +9,48 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-# Load the prices dataset
-df = pd.read_csv("prices.csv")
+# Load the wheat export price data
+wheat_prices = pd.read_csv("prices.csv")
 
-# Convert the date column to datetime
-df["Date"] = pd.to_datetime(df["Date"], format="%d-%b-%y", errors="coerce")
-df = df.dropna(subset=["Date"])
+# Drop any unnecessary unnamed columns (e.g., index remnants)
+columns_to_drop = [col for col in wheat_prices.columns if col.startswith("Unnamed")]
+wheat_prices = wheat_prices.drop(columns=columns_to_drop)
 
-# Remove any unnamed columns
-df = df.loc[:, ~df.columns.str.startswith("Unnamed")]
+# Convert the 'Date' column to datetime format
+wheat_prices["Date"] = pd.to_datetime(wheat_prices["Date"])
+print("Missing date values:", wheat_prices["Date"].isna().sum())
 
-# Assign each date to a quarter (e.g., 2023Q1, 2023Q2)
-df["Quarter"] = df["Date"].dt.to_period("Q")
+# Drop rows where date conversion failed
+wheat_prices = wheat_prices[wheat_prices["Date"].notna()]
 
-# Group by quarter and calculate mean prices per country
-df_quarterly = df.groupby("Quarter").mean(numeric_only=True).round(1)
+# Create a new column showing the quarter (e.g., 2023Q1)
+wheat_prices["Quarter"] = wheat_prices["Date"].dt.to_period("Q")
 
-# Clean up the index for display (e.g., convert Period to string)
-df_quarterly.index = df_quarterly.index.astype(str)
+# Calculate average price per country for each quarter
+quarterly_means = wheat_prices.groupby("Quarter").mean(numeric_only=True).round(1)
 
-# Create the heatmap
+# Convert index from period format to string (e.g., "2023Q1")
+quarterly_means.index = quarterly_means.index.astype(str)
+
+# Set up the heatmap plot
 plt.figure(figsize=(14, 6))
 sns.heatmap(
-    df_quarterly.T,
+    quarterly_means.T,
     cmap="YlGnBu",
     annot=False,
     linewidths=0.4,
     cbar_kws={'label': 'USD/ton'}
 )
 
-# Chart formatting
+# Configure plot labels and title
 plt.title("Quarterly Average Wheat Export Prices by Country", fontsize=13)
 plt.xlabel("Quarter")
 plt.ylabel("Country")
 plt.xticks(rotation=45)
 plt.tight_layout()
 
-
-# Save output
+# Save the plot
 plt.savefig("prices_heatmap.png", dpi=300)
+
+
 
