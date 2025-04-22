@@ -134,7 +134,7 @@ As an alternative visual representation of the price trends shown earlier in the
 
 ![Price_median](wheat_prices_pre_post_war.png)
 
-This boxplot named illustrates the distribution of monthly wheat export prices across seven major producing countries, comparing the three-year periods before and after the outbreak of the Russia–Ukraine war (February 24, 2022). The median price for each country and period is annotated on the plot, providing a clear indication of shifts in central price levels. The visual reveals that post-war prices have generally increased across all countries, with notable jumps in Canada, Argentina, and the USA. The spread of prices (i.e., market volatility) also appears wider in the post-war period for several countries, reflecting heightened uncertainty in global wheat markets during geopolitical disruptions.
+This boxplot illustrates the distribution of monthly wheat export prices across seven major producing countries, comparing the three-year periods before and after the outbreak of the Russia–Ukraine war (February 24, 2022). The median price for each country and period is annotated on the plot, providing a clear indication of shifts in central price levels. The visual reveals that post-war prices have generally increased across all countries, with notable jumps in Canada, Argentina, and the USA. The spread of prices (i.e., market volatility) also appears wider in the post-war period for several countries, reflecting heightened uncertainty in global wheat markets during geopolitical disruptions.
 
 ![histogram](histogram.png)
 
