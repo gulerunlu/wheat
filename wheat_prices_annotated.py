@@ -42,7 +42,7 @@ balloon_events = {
     "2010-08-05": "Russia Export Ban",
     "2011-03-01": "Arab Spring",
     "2012-07-01": "US Drought",
-    "2022-02-24": "Ukraine Invasion"
+    "2022-02-24": "Russian invasion of Ukraine"
 }
 
 # Plot the data
